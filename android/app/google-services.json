@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "313945939433",
+    "project_id": "driver-4e2fe",
+    "storage_bucket": "driver-4e2fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313945939433:android:8969faf3ff218d5bcfbf78",
+        "android_client_info": {
+          "package_name": "com.example.rickshaw_driver_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLnT_jJI856pEW_MUEs_P-T_FGLPsqBnw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
