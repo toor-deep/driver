@@ -86,6 +86,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(state.copyWith(isLoading: false, authUser: user));
       onSuccess();
     } catch (err) {
+      showSnackbar(err.toString(), Colors.red);
       emit(state.copyWith(isLoading: false));
     }
   }

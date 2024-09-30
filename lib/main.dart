@@ -5,6 +5,7 @@ import 'package:flutter_dropdown_alert/dropdown_alert.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:rickshaw_driver_app/features/google_map/bloc/location_cubit.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/presentation/bloc/ride_request_bloc.dart';
 import 'package:rickshaw_driver_app/shared/constants.dart';
 import 'package:rickshaw_driver_app/shared/state/app-theme/app_theme_cubit.dart';
 import 'package:rickshaw_driver_app/splash_screen.dart';
@@ -33,7 +34,12 @@ void main() async {
         BlocProvider(
           create: (context) => getIt<UserCubit>(),
         ),
-        BlocProvider(create: (context) => LocationCubit(),)
+        BlocProvider(
+          create: (context) => LocationCubit(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<RideCubit>(),
+        )
       ],
       child: const MyApp(),
     ),

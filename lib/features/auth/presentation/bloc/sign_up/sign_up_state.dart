@@ -67,6 +67,7 @@ class SignUpState extends Equatable {
     passwordStatus,
     isInputValid,
     isLoading,
+    phone,
     vehicleNumber,
     vehicleNoStatus
   ];

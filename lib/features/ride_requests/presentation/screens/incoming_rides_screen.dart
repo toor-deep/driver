@@ -1,45 +1,78 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/domain/entity/requested_ride.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/presentation/bloc/ride_request_bloc.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/presentation/bloc/ride_request_state.dart';
 import 'package:rickshaw_driver_app/shared/dialog.dart';
-import '../../shared/constants.dart';
+import '../../../../shared/constants.dart';
 
-class IncomingRidesScreen extends StatelessWidget {
+class IncomingRidesScreen extends StatefulWidget {
   const IncomingRidesScreen({super.key});
 
   @override
+  State<IncomingRidesScreen> createState() => _IncomingRidesScreenState();
+}
+
+class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
+  @override
+  void initState() {
+    context.read<RideCubit>().getAllRidesList();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [listView()],
-        ),
-      ),
+    return BlocBuilder<RideCubit, RequestedRideState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (state.isLoading == true) ...[
+                    const Center(child: CircularProgressIndicator())
+                  ] else ...[
+                    if ((state.requestedRides ?? []).isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: listView(state.requestedRides ?? []),
+                      )
+                    ] else ...[
+                      const Center(child: Text('No Request Yet'))
+                    ]
+                  ],
+                ]),
+          ),
+        );
+      },
     );
   }
 
-  Widget listView() {
+  Widget listView(List<RideRequestEntity> requestedRides) {
     return Expanded(
       child: ListView.separated(
           itemBuilder: (context, index) {
+            final item = requestedRides[index];
             return Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.grey)
-              ),
+                  border: Border.all(color: Colors.grey)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
                     ListTile(
                       leading: const CircleAvatar(),
-                      title: Text("Amandeep kaur",
+                      title: Text(item.userName ?? "",
                           style: Theme.of(context).textTheme.displayMedium),
                       subtitle: const Text("jhgffghj"),
-                      trailing: Text("\$456",
+                      trailing: Text(item.price.toString(),
                           style: Theme.of(context).textTheme.displayMedium),
                     ),
                     Spacing.hmed,
@@ -62,9 +95,9 @@ class IncomingRidesScreen extends StatelessWidget {
                                 ),
                               ),
                               const Dash(
-                                  direction: Axis.vertical,
-                                  length: 40,
-                                  dashLength: 6,
+                                direction: Axis.vertical,
+                                length: 40,
+                                dashLength: 6,
                               ),
                               const Icon(
                                 Icons.location_on,
@@ -83,15 +116,15 @@ class IncomingRidesScreen extends StatelessWidget {
                                       style: Theme.of(context)
                                           .textTheme
                                           .displayMedium),
-                                  const Text(
-                                    "vcv khgfvjm",
+                                  Text(
+                                    item.startLocation,
                                   ),
                                   Spacing.hlg,
                                   const Text(
                                     "End Location",
                                   ),
-                                  const Text(
-                                    "nvcbn iuyfdhj",
+                                  Text(
+                                    item.endLocation,
                                   ),
                                 ],
                               ),
@@ -140,7 +173,7 @@ class IncomingRidesScreen extends StatelessWidget {
           separatorBuilder: (context, index) => SizedBox(
                 height: 0.02.sh,
               ),
-          itemCount: 10),
+          itemCount: requestedRides.length),
     );
   }
 }

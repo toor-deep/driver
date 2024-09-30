@@ -32,7 +32,7 @@ class UserCubit extends Cubit<UserState> {
   Future<void> fetchUser() async {
     emit(state.copyWith(isLoading: true));
     try {
-      final user = await getUserUseCase.call(currentUser?.email??"");
+      final user = await getUserUseCase.call(currentUser?.email ?? "");
       if (user != null) {
         emit(state.copyWith(isLoading: false, authUser: user));
       } else {
@@ -47,7 +47,7 @@ class UserCubit extends Cubit<UserState> {
     emit(state.copyWith(isLoading: true));
     try {
       await createUserUseCase.call(authUser);
-      emit(state.copyWith(isLoading: false));
+      emit(state.copyWith(isLoading: false,authUser: authUser));
     } catch (e) {
       emit(state.copyWith(isLoading: false));
     }
@@ -60,11 +60,14 @@ class UserCubit extends Cubit<UserState> {
       emit(state.copyWith(
           isLoading: false,
           authUser: AuthUser(
-              id: '',
-              email: authUser.email,
-              photoURL: authUser.photoURL,
-              phone: authUser.phone,
-              name: authUser.name)));
+            id: currentUser?.uid ?? "",
+            isOnline: authUser.isOnline,
+            vehicleNumber: authUser.vehicleNumber ?? "",
+            email: authUser.email ?? (currentUser?.email ?? ""),
+            photoURL: authUser.photoURL ?? (currentUser?.photoURL ?? ""),
+            phone: authUser.phone ?? (currentUser?.phoneNumber ?? ""),
+            name: authUser.name ?? (currentUser?.displayName ?? ""),
+          )));
       showSnackbar('Successfully Updated', Colors.green);
     } catch (e) {
       emit(state.copyWith(isLoading: false));

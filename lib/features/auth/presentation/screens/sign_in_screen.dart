@@ -42,7 +42,9 @@ class _SignInScreenState extends State<SignInScreen> {
         builder: (context, state) {
           return Column(
             children: [
-              Image(image: const AssetImage(AppImages.driverBg),height: 0.35.sh,
+              Image(
+                image: const AssetImage(AppImages.driverBg),
+                height: 0.35.sh,
                 width: 0.9.sw,
               ),
               Padding(
@@ -152,6 +154,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                 id: '',
                                 email: value.email ?? "",
                                 name: value.name ?? "",
+                                vehicleNumber: '',
+                                isOnline: false,
+                                role: 'driver',
                                 photoURL: value.photoURL ?? "",
                                 phone: value.phone ?? ""));
                             Navigator.pushNamed(context, '/Home');

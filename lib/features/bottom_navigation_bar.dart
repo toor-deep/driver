@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rickshaw_driver_app/features/google_map/map_screen.dart';
 import 'package:rickshaw_driver_app/features/history/ride_history.dart';
 import 'package:rickshaw_driver_app/features/home/screens/home_screen.dart';
-import 'package:rickshaw_driver_app/features/ride_requests/incoming_rides_screen.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/presentation/screens/incoming_rides_screen.dart';
 import 'more/more_main_view.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {

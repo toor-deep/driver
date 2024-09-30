@@ -1,4 +1,10 @@
 import 'package:get_it/get_it.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/data/data_source/ride_request_data_source.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/domain/repository_impl/ride_request_repository_impl.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/get_ride_details.usecase.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/get_ride_request.usecase.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/update_ride_status.usecase.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/presentation/bloc/ride_request_bloc.dart';
 import '../../features/auth/data/data_source/auth_data_source.dart';
 import '../../features/auth/domain/repository_impl/auth_repository_impl.dart';
 import '../../features/auth/domain/usecase/change_password.usecase.dart';
@@ -64,4 +70,25 @@ void injectDependencies() {
     updateUserUseCase: getIt<UpdateUserUseCase>(),
     deleteUserUseCase: getIt<DeleteUserUseCase>(),
   ));
+
+  ///////////////Ride dependencies//////////////////
+
+  //data Sources//
+  getIt.registerSingleton(DriverRideRequestDataSourceImpl());
+  //repositories//
+  getIt.registerSingleton(DriverRideRequestRepositoryImpl(
+      getIt<DriverRideRequestDataSourceImpl>()));
+  //usecases//
+  getIt.registerSingleton(
+      GetRideRequestDetailsUseCase(getIt<DriverRideRequestRepositoryImpl>()));
+  getIt.registerSingleton(
+      UpdateRideRequestStatusUseCase(getIt<DriverRideRequestRepositoryImpl>()));
+  getIt.registerSingleton(GetAllPendingRideRequestsForDriverUseCase(
+      getIt<DriverRideRequestRepositoryImpl>()));
+  //bloc
+  getIt.registerSingleton(RideCubit(
+      getRideRequestDetailsUseCase: getIt<GetRideRequestDetailsUseCase>(),
+      getAllPendingRideRequestsForDriverUseCase:
+          getIt<GetAllPendingRideRequestsForDriverUseCase>(),
+      updateRideRequestStatusUseCase: getIt<UpdateRideRequestStatusUseCase>()));
 }

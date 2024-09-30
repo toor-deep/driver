@@ -153,8 +153,8 @@ class _SignInScreenState extends State<SignUpScreen> {
                       height: 0.06.sh,
                       child: ElevatedButton(
                         onPressed: () {
-                          if (context.read<SignUpCubit>().state.isInputValid ==
-                              false) {
+                          if (context.read<SignUpCubit>().inputValidator() !=
+                              true) {
                             showSnackbar('Invalid Input', Colors.red);
                           } else {
                             final signUpCubitState =
@@ -167,6 +167,8 @@ class _SignInScreenState extends State<SignUpScreen> {
                                   email: signUpCubitState.email ?? "",
                                   name: signUpCubitState.userName ?? "",
                                   photoURL: '',
+                                  role: 'driver',
+                                  isOnline: false,
                                   vehicleNumber: signUpCubitState.vehicleNumber,
                                   phone: signUpCubitState.phone ?? ""));
                               Navigator.pushNamed(

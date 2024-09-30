@@ -8,14 +8,12 @@ class SignUpCubit extends Cubit<SignUpState> {
   void emailChanged(String value) {
     final email = value.toString();
 
-    final emailRegex = RegExp(r'^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+    final emailRegex =
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
     if (emailRegex.hasMatch(email)) {
       emit(
-        state.copyWith(
-            email: email,
-            emailStatus: EmailStatus.valid,
-            isInputValid: inputValidator()),
+        state.copyWith(email: email, emailStatus: EmailStatus.valid),
       );
     } else {
       emit(state.copyWith(emailStatus: EmailStatus.invalid));
@@ -28,9 +26,9 @@ class SignUpCubit extends Cubit<SignUpState> {
     if (password.length >= 6) {
       emit(
         state.copyWith(
-            password: password,
-            passwordStatus: PasswordStatus.valid,
-            isInputValid: inputValidator()),
+          password: password,
+          passwordStatus: PasswordStatus.valid,
+        ),
       );
     } else {
       emit(state.copyWith(passwordStatus: PasswordStatus.invalid));
@@ -39,25 +37,23 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   void usernameChanged(String name) async {
     if (name.isNotEmpty) {
-      emit(state.copyWith(userName: name, isInputValid: inputValidator()));
+      emit(state.copyWith(userName: name));
     }
   }
 
   void phoneChanged(String phone) async {
     if (phone.isNotEmpty && phone.length == 10) {
-      emit(state.copyWith(phone: phone, isInputValid: inputValidator()));
+      emit(state.copyWith(phone: phone));
     }
   }
 
-
   void vehicleNumberChanged(String vehicleNumber) async {
-    final vehicleRegex = RegExp(r'^[A-Z]{3}-\d{4}$');
-
-    if (vehicleRegex.hasMatch(vehicleNumber)) {
+    if (vehicleNumber.length == 10) {
       emit(state.copyWith(
-          vehicleNumber: vehicleNumber,vehicleNoStatus: VehicleNoStatus.valid, isInputValid: inputValidator()));
-    }
-    else {
+        vehicleNumber: vehicleNumber,
+        vehicleNoStatus: VehicleNoStatus.valid,
+      ));
+    } else {
       emit(state.copyWith(vehicleNoStatus: VehicleNoStatus.invalid));
     }
   }

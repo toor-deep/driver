@@ -33,7 +33,7 @@ class _MapSampleState extends State<MapSample> {
       },
       initialCameraPosition: CameraPosition(
         target: widget.currentLocation,
-        zoom: 14.0,
+        zoom: 4.0,
       ),
       markers: _createMarker(),
       myLocationEnabled: true,

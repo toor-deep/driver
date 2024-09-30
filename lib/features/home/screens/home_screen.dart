@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rickshaw_driver_app/features/auth/domain/entities/auth_user.dart';
+import 'package:rickshaw_driver_app/features/current_user/presentation/bloc/user_state.dart';
 import 'package:rickshaw_driver_app/features/google_map/bloc/location_state.dart';
 import '../../current_user/presentation/bloc/user_cubit.dart';
 import '../../google_map/bloc/location_cubit.dart';
@@ -18,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool isOnline = true;
   late UserCubit userCubit;
   late LatLng currentPosition;
+  User? firebaseAuth = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -29,25 +33,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LocationCubit, LocationState>(
-      builder: (context, state) {
-        if (state.position != null) {
-          currentPosition =
-              LatLng(state.position!.latitude, state.position!.longitude);
-        } else {
-          currentPosition = const LatLng(37.7749, -122.4194);
-        }
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: Stack(children: [
-            MapSample(
-              currentLocation: currentPosition,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30, left: 8, right: 8),
-              child: _buildOverlay(),
-            ),
-          ]),
+    return BlocBuilder<UserCubit, UserState>(
+      builder: (context, userState) {
+        return BlocBuilder<LocationCubit, LocationState>(
+          builder: (context, locationState) {
+            if (locationState.position != null) {
+              currentPosition = LatLng(locationState.position!.latitude,
+                  locationState.position!.longitude);
+            } else {
+              currentPosition = const LatLng(37.7749, -122.4194);
+            }
+            return Scaffold(
+              backgroundColor: Colors.white,
+              body: Stack(children: [
+                MapSample(
+                  currentLocation: currentPosition,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30, left: 8, right: 8),
+                  child: _buildOverlay(),
+                ),
+              ]),
+            );
+          },
         );
       },
     );
@@ -76,13 +84,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                 ),
                 Switch(
-                  value: isOnline,
+                  value: userCubit.state.authUser?.isOnline ?? false,
                   activeTrackColor: Theme.of(context).primaryColor,
                   activeColor: Colors.white,
                   onChanged: (value) {
                     setState(() {
                       isOnline = value;
                     });
+                    context.read<UserCubit>().updateUser(AuthUser(
+                        role: 'driver',
+                        name: userCubit.state.authUser?.name ?? '',
+                        phone: userCubit.state.authUser?.phone ?? '',
+                        photoURL: userCubit.state.authUser?.photoURL ?? '',
+                        email: userCubit.state.authUser?.email ?? '',
+                        vehicleNumber:
+                            userCubit.state.authUser?.vehicleNumber ?? '',
+                        id: firebaseAuth?.uid ?? "",
+                        isOnline: isOnline));
                   },
                 ),
               ],
