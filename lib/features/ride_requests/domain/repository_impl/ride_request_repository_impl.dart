@@ -22,11 +22,13 @@ class DriverRideRequestRepositoryImpl implements DriverRideRequestRepository {
   }
 
   @override
-  Future<List<RideRequestEntity>> getAllPendingRideRequestsForDriver() async {
-    final rideRequests = await dataSource.getAllPendingRideRequestsForDriver();
-
-    return rideRequests.map((rideRequest) => rideRequest.toEntity()).toList();
+  @override
+  Stream<List<RideRequestEntity>> getAllPendingRideRequestsForDriver() {
+    return dataSource.getAllPendingRideRequestsForDriver().map((rideRequests) {
+      return rideRequests.map((rideRequest) => rideRequest.toEntity()).toList();
+    });
   }
+
 
   @override
   Future<RideRequestEntity> getRideRequestDetails(String requestId) async {

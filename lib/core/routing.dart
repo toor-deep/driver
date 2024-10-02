@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:rickshaw_driver_app/features/bottom_navigation_bar.dart';
 import 'package:rickshaw_driver_app/features/more/screens/privacy_policy.dart';
@@ -11,6 +11,7 @@ import '../features/more/screens/my_wallet.dart';
 import '../features/more/screens/profile_screen.dart';
 import '../features/more/screens/settings/change_password.dart';
 import '../features/more/screens/settings/settings.dart';
+import '../features/ride_requests/presentation/screens/distance_tracking_screen.dart';
 import '../main.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -60,6 +61,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/RideHistory':
       return MaterialPageRoute(
         builder: (context) => const RideHistoryScreen(),
+      );
+    case '/DistanceTracking':
+      return MaterialPageRoute(
+        builder: (context) => const DistanceTrackingScreen(),
       );
     default:
       return MaterialPageRoute(

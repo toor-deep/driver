@@ -8,7 +8,7 @@ abstract class DriverRideRequestRepository {
     required String status,
   });
 
-  Future<List<RideRequestEntity>> getAllPendingRideRequestsForDriver();
+  Stream<List<RideRequestEntity>>  getAllPendingRideRequestsForDriver();
 
   Future<RideRequestEntity> getRideRequestDetails(String requestId);
 }
