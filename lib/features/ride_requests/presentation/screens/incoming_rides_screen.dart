@@ -8,9 +8,11 @@ import 'package:rickshaw_driver_app/features/ride_requests/domain/entity/request
 import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/update_ride_status.usecase.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/presentation/bloc/ride_request_bloc.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/presentation/bloc/ride_request_state.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/presentation/screens/distance_tracking_screen.dart';
 import 'package:rickshaw_driver_app/shared/dialog.dart';
 import '../../../../shared/casting.dart';
 import '../../../../shared/constants.dart';
+import '../../../current_user/presentation/bloc/user_cubit.dart';
 
 class IncomingRidesScreen extends StatefulWidget {
   const IncomingRidesScreen({super.key});
@@ -33,6 +35,27 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<RideCubit, RequestedRideState>(
       builder: (context, state) {
+        final userCubit = context.read<UserCubit>();
+        final isOnline = userCubit.isOnline;
+
+        if (!isOnline) {
+          return const Scaffold(
+            body: Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'You are currently offline. Please go online to view ride requests.',
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -119,7 +142,7 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
           children: [
             ListTile(
               leading: const CircleAvatar(),
-              title: Text(item.userName ?? "",
+              title: Text(item.userName,
                   style: Theme.of(context).textTheme.displayMedium),
               trailing: Text(item.price.toString(),
                   style: Theme.of(context).textTheme.displayMedium),
@@ -168,7 +191,8 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                               style: Theme.of(context).textTheme.displayMedium),
                           Text(item.startLocation),
                           Spacing.hlg,
-                          const Text("End Location"),
+                          Text("End Location",
+                              style: Theme.of(context).textTheme.displayMedium),
                           Text(item.endLocation),
                         ],
                       ),
@@ -189,7 +213,13 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                         context.read<RideCubit>().updateRideStatus(
                             UpdateRideRequestStatusParams(
                                 requestId: item.id, status: 'accepted'), () {
-                          Navigator.pushNamed(context, '/DistanceTracking');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DistanceTrackingScreen(
+                                  requestId: item.id ?? "",
+                                ),
+                              ));
                         });
                       },
                       child: rideCubit.state.isLoading == true
@@ -202,9 +232,17 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         showDeleteDialog(
-                          context: context,
-                          onTap: () {},
-                        );
+                            context: context,
+                            onTap: () {
+                              context.read<RideCubit>().updateRideStatus(
+                                  UpdateRideRequestStatusParams(
+                                      requestId: item.id ?? "",
+                                      status: 'cancelled'), () {
+                                context
+                                    .read<RideCubit>()
+                                    .completeRide(item.id ?? "");
+                              });
+                            });
                       },
                       style: ButtonStyle(
                           backgroundColor:
@@ -353,7 +391,12 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                         context.read<RideCubit>().updateRideStatus(
                             UpdateRideRequestStatusParams(
                                 requestId: item.id, status: 'accepted'), () {
-                          Navigator.pushNamed(context, '/DistanceTracking');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DistanceTrackingScreen(
+                                        requestId: item.id ?? "",
+                                      )));
                         });
                       },
                       child: rideCubit.state.isLoading == true
@@ -366,9 +409,17 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         showDeleteDialog(
-                          context: context,
-                          onTap: () {},
-                        );
+                            context: context,
+                            onTap: () {
+                              context.read<RideCubit>().updateRideStatus(
+                                  UpdateRideRequestStatusParams(
+                                      requestId: item.id,
+                                      status: 'cancelled'), () {
+                                context
+                                    .read<RideCubit>()
+                                    .completeRide(item.id ?? "");
+                              });
+                            });
                       },
                       style: ButtonStyle(
                           backgroundColor:

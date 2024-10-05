@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  bool isOnline = true;
+  bool isOnline = false;
   late UserCubit userCubit;
   late LatLng currentPosition;
   User? firebaseAuth = FirebaseAuth.instance.currentUser;
@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     userCubit = context.read<UserCubit>();
+    isOnline = userCubit.isOnline;
     context.read<LocationCubit>().checkLocationPermission();
     userCubit.fetchUser();
   }
@@ -84,12 +85,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                 ),
                 Switch(
-                  value: userCubit.state.authUser?.isOnline ?? false,
+                  value: userCubit.isOnline,
                   activeTrackColor: Theme.of(context).primaryColor,
                   activeColor: Colors.white,
                   onChanged: (value) {
+                    userCubit.isOnline=value;
                     setState(() {
-                      isOnline = value;
+
                     });
                     context.read<UserCubit>().updateUser(AuthUser(
                         role: 'driver',

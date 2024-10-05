@@ -13,7 +13,9 @@ class MoreOptionsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("More Options"),
+        automaticallyImplyLeading: false,
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

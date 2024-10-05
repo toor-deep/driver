@@ -62,6 +62,6 @@ class RideRequestEntity extends Equatable {
         price,
         createdAt,
         isScheduled,
-       userName,
+        userName,
       ];
 }

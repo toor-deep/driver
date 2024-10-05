@@ -28,7 +28,7 @@ class UserCubit extends Cubit<UserState> {
   }) : super(UserState());
 
   User? currentUser = FirebaseAuth.instance.currentUser;
-
+  bool isOnline=false;
   Future<void> fetchUser() async {
     emit(state.copyWith(isLoading: true));
     try {
@@ -47,7 +47,7 @@ class UserCubit extends Cubit<UserState> {
     emit(state.copyWith(isLoading: true));
     try {
       await createUserUseCase.call(authUser);
-      emit(state.copyWith(isLoading: false,authUser: authUser));
+      emit(state.copyWith(isLoading: false, authUser: authUser));
     } catch (e) {
       emit(state.copyWith(isLoading: false));
     }
@@ -57,17 +57,12 @@ class UserCubit extends Cubit<UserState> {
     emit(state.copyWith(isLoading: true));
     try {
       await updateUserUseCase.call(authUser);
-      emit(state.copyWith(
-          isLoading: false,
-          authUser: AuthUser(
-            id: currentUser?.uid ?? "",
-            isOnline: authUser.isOnline,
-            vehicleNumber: authUser.vehicleNumber ?? "",
-            email: authUser.email ?? (currentUser?.email ?? ""),
-            photoURL: authUser.photoURL ?? (currentUser?.photoURL ?? ""),
-            phone: authUser.phone ?? (currentUser?.phoneNumber ?? ""),
-            name: authUser.name ?? (currentUser?.displayName ?? ""),
-          )));
+      AuthUser authUserUpdated = state.authUser!.copyWith(
+        id: currentUser?.uid ?? "",
+        phone: authUser.phone ?? (currentUser?.phoneNumber ?? ""),
+        name: authUser.name ?? (currentUser?.displayName ?? ""),
+      );
+      emit(state.copyWith(isLoading: false, authUser: authUserUpdated));
       showSnackbar('Successfully Updated', Colors.green);
     } catch (e) {
       emit(state.copyWith(isLoading: false));
@@ -114,14 +109,10 @@ class UserCubit extends Cubit<UserState> {
           // Assuming that email is unique and we only expect one document
           final docRef = querySnapshot.docs.first.reference;
 
-          await docRef.update({'photoURL': imageUrl});
-          AuthUser updatedUser = AuthUser(
-            id: user.uid,
-            email: userEmail,
-            photoURL: imageUrl,
-            name: user.displayName,
-            phone: user.phoneNumber,
-          );
+          await docRef.set({'photoURL': imageUrl}, SetOptions(merge: true));
+
+          AuthUser updatedUser = state.authUser!.copyWith(photoURL: imageUrl);
+
           emit(state.copyWith(authUser: updatedUser, isLoading: false));
           showSnackbar('Image Uploaded Successfully', Colors.green);
         } else {

@@ -68,7 +68,7 @@ dependencies:
   geolocator:
   flutter_polyline_points:
   location:
-
+  action_slider:
   image_picker: ^1.1.2
   firebase_storage:
   text_scroll: ^0.2.0

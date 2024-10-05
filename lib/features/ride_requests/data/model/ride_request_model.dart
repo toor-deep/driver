@@ -53,8 +53,8 @@ class RideRequest extends Equatable {
 
     return RideRequest(
       id: map['id'] ?? '',
-      userId: map['userId'] ?? '', // Ensure to handle null values properly
-      isScheduled: map['isScheduled'] ?? false, // Make sure this is a boolean
+      userId: map['userId'] ?? '',
+      isScheduled: map['isScheduled'] ?? false,
       startLocation: map['startLocation'] ?? '',
       endLocation: map['endLocation'] ?? '',
       vehicleType: map['vehicleType'] ?? '',
