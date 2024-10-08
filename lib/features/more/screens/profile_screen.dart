@@ -245,9 +245,12 @@ class _MyProfileState extends State<MyProfile> {
                           if (isUpdate) {
                             userCubit.updateUser(AuthUser(
                                 id: '',
+                                vehicleNumber: userCubit.state.authUser?.vehicleNumber??"",
                                 email: emailController.text,
                                 name: nameController.text,
                                 phone: phoneController.text,
+                                role: 'driver',
+                                isOnline: userCubit.state.authUser?.isOnline??false,
                                 photoURL: ''));
                           }
                         },

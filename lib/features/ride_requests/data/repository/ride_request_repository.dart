@@ -8,7 +8,13 @@ abstract class DriverRideRequestRepository {
     required String status,
   });
 
-  Future<List<RideRequestEntity>> getAllPendingRideRequestsForDriver();
+  Stream<List<RideRequestEntity>>  getAllPendingRideRequestsForDriver();
 
   Future<RideRequestEntity> getRideRequestDetails(String requestId);
+  Future<void> saveCompletedOrCanceledRide({
+    required String driverId,
+    required String requestId
+  });
+  Future<List<RideRequestEntity>> getCompletedRideRequestsForDriver(String driverId);
+
 }

@@ -1,8 +1,10 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/completed_ride.usecase.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/get_ride_request.usecase.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/presentation/bloc/ride_request_state.dart';
+import 'package:rickshaw_driver_app/shared/toast_alert.dart';
 import '../../domain/usecase/get_ride_details.usecase.dart';
 import '../../domain/usecase/update_ride_status.usecase.dart';
 
@@ -11,12 +13,14 @@ class RideCubit extends Cubit<RequestedRideState> {
   final UpdateRideRequestStatusUseCase updateRideRequestStatusUseCase;
   final GetAllPendingRideRequestsForDriverUseCase
       getAllPendingRideRequestsForDriverUseCase;
+  final CompleteRideUseCase completeRideUseCase;
 
-  RideCubit({
-    required this.getRideRequestDetailsUseCase,
-    required this.getAllPendingRideRequestsForDriverUseCase,
-    required this.updateRideRequestStatusUseCase,
-  }) : super(const RequestedRideState());
+  RideCubit(
+      {required this.getRideRequestDetailsUseCase,
+      required this.getAllPendingRideRequestsForDriverUseCase,
+      required this.updateRideRequestStatusUseCase,
+      required this.completeRideUseCase})
+      : super(const RequestedRideState());
 
   bool isActiveRide = false;
   final userId = FirebaseAuth.instance.currentUser?.uid;
@@ -31,28 +35,81 @@ class RideCubit extends Cubit<RequestedRideState> {
     }
   }
 
-  Future<void> getAllRidesList() async {
+  void getAllRidesList() {
     emit(state.copyWith(isLoading: true));
     try {
-      final result = await getAllPendingRideRequestsForDriverUseCase.call();
-      emit(state.copyWith(isLoading: false, requestedRides: result));
+      getAllPendingRideRequestsForDriverUseCase().listen((pendingRides) {
+        emit(state.copyWith(isLoading: false, requestedRides: pendingRides));
+      }, onError: (e) {
+        emit(state.copyWith(isLoading: false));
+      });
     } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> updateRideStatus(
+      UpdateRideRequestStatusParams params, Function onSuccess) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      await updateRideRequestStatusUseCase.call(params);
+      emit(state.copyWith(isLoading: false));
+      statusSet(params.status);
+      if (params.status == 'accepted') {
+        isActiveRide = true;
+      }
+      isActiveRide = false;
+      onSuccess();
+    } catch (e) {
+      print(e);
       emit(state.copyWith(isLoading: false));
     }
   }
 
-  Future<void> hasActiveRide(String userId) async {
+  Future<void> completeRide(String requestId) async {
+    try {
+      emit(state.copyWith(isLoading: true));
+      await completeRideUseCase.call(
+        requestId: requestId,
+        id: userId ?? "",
+      );
+      emit(state.copyWith(isLoading: false));
+    } catch (e) {
+      print('Failed to complete the ride: $e');
+    }
+  }
+
+  Future<void> getCompletedRides() async {
     emit(state.copyWith(isLoading: true));
     try {
-      final rides = await getAllPendingRideRequestsForDriverUseCase.call();
-
-      if (rides.any((ride) => ride.status == 'active')) {
-        isActiveRide = true;
-      }
+      final data =
+          await completeRideUseCase.getCompletedRides(driverId: userId ?? "");
+      emit(state.copyWith(isLoading: false, requestedRides: data));
     } catch (e) {
-      emit(state.copyWith(isLoading: false));
-    } finally {
-      emit(state.copyWith(isLoading: false));
+      print(e);
     }
+  }
+
+// Future<void> hasActiveRide(String userId) async {
+//   emit(state.copyWith(isLoading: true));
+//   try {
+//     final rides = await getAllPendingRideRequestsForDriverUseCase.call();
+//
+//     if (await rides.any((ride) => ride. == 'active')) {
+//       isActiveRide = true;
+//     }
+//   } catch (e) {
+//     emit(state.copyWith(isLoading: false));
+//   } finally {
+//     emit(state.copyWith(isLoading: false));
+//   }
+// }
+
+  void statusSet(String status) {
+    if (status == 'cancelled') {
+      showSnackbar('Ride request declined successfully.', Colors.green);
+    } else if (status == 'completed') {
+      showSnackbar('Ride request completed successfully.', Colors.green);
+    } else {}
   }
 }

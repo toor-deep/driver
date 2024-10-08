@@ -66,6 +66,9 @@ dependencies:
   intl: ^0.19.0
   google_maps_flutter:
   geolocator:
+  flutter_polyline_points:
+  location:
+  action_slider:
   image_picker: ^1.1.2
   firebase_storage:
   text_scroll: ^0.2.0

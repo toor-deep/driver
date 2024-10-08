@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -22,6 +24,21 @@ class _MapSampleState extends State<MapSample> {
       setState(() {});
     });
       super.didUpdateWidget(oldWidget);
+  }
+
+
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (Platform.isAndroid && state == AppLifecycleState.resumed) {
+      setState(() {
+        forceReRender();
+      });
+    }
+    //super.didChangeAppLifecycleState(state);
+  }
+
+  Future<void> forceReRender() async {
+    await mapController?.setMapStyle('[]');
   }
 
   @override

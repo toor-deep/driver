@@ -5,7 +5,7 @@ import '../design-system/styles.dart';
 final appNavigationKey = GlobalKey<NavigatorState>();
 final siteNavigationKey = GlobalKey<NavigatorState>();
 const kAppName = 'Driver RideMate';
-
+const mapKey='AIzaSyAHcC1ciA59pz4WrNCS9KBP3d0FY4Xexm4';
 // Spacings
 class Spacing {
   static SizedBox get hlg => SizedBox(height: Insets.lg);

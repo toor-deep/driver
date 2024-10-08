@@ -11,6 +11,7 @@ class AppTheme {
     return ThemeData(
       brightness: isDark ? Brightness.dark : Brightness.light,
       primaryColor: isDark ? Colors.black : Colors.blue,
+      secondaryHeaderColor: isDark ? Colors.white : Colors.black,
       appBarTheme: AppBarTheme(
         backgroundColor: isDark ? Colors.black : Colors.blue,
         centerTitle: true,
@@ -55,7 +56,7 @@ class AppTheme {
         bodyLarge: AppFont.normal.s20
             .copyWith(color: isDark ? Colors.white : Colors.black),
         displayMedium: AppFont.normal.s14
-            .copyWith( fontWeight: FontWeight.bold),
+            .copyWith( fontWeight: FontWeight.bold,color: isDark ? Colors.white : Colors.black),
       ),
 
     );

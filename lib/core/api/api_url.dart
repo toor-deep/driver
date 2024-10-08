@@ -3,12 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ApiUrl {
   const ApiUrl._();
 
-  static const baseUrl = "https://....com/api/v1";
-
-
   static final users = FirebaseFirestore.instance.collection("users");
-  static final requested_rides =
+  static final requestedRides =
       FirebaseFirestore.instance.collection('requested_rides');
+  static final driverRides =
+      FirebaseFirestore.instance.collection('driver_history');
   static final prebook_rides =
-  FirebaseFirestore.instance.collection('prebook_rides');
+      FirebaseFirestore.instance.collection('prebook_rides');
+  static final rides = FirebaseFirestore.instance.collectionGroup('rides');
 }

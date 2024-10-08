@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/data/data_source/ride_request_data_source.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/domain/repository_impl/ride_request_repository_impl.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/completed_ride.usecase.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/get_ride_details.usecase.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/get_ride_request.usecase.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/update_ride_status.usecase.dart';
@@ -85,8 +86,11 @@ void injectDependencies() {
       UpdateRideRequestStatusUseCase(getIt<DriverRideRequestRepositoryImpl>()));
   getIt.registerSingleton(GetAllPendingRideRequestsForDriverUseCase(
       getIt<DriverRideRequestRepositoryImpl>()));
+  getIt.registerSingleton(
+      CompleteRideUseCase(getIt<DriverRideRequestRepositoryImpl>()));
   //bloc
   getIt.registerSingleton(RideCubit(
+      completeRideUseCase: getIt<CompleteRideUseCase>(),
       getRideRequestDetailsUseCase: getIt<GetRideRequestDetailsUseCase>(),
       getAllPendingRideRequestsForDriverUseCase:
           getIt<GetAllPendingRideRequestsForDriverUseCase>(),
