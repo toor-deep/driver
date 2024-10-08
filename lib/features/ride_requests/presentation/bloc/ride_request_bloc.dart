@@ -106,10 +106,10 @@ class RideCubit extends Cubit<RequestedRideState> {
 // }
 
   void statusSet(String status) {
-    if (status == 'cancelled') {
+    if (status == 'accepted') {
+      showSnackbar('Ride request accepted successfully.', Colors.green);
+    } else if (status == 'cancelled') {
       showSnackbar('Ride request declined successfully.', Colors.green);
-    } else if (status == 'completed') {
-      showSnackbar('Ride request completed successfully.', Colors.green);
     } else {}
   }
 }

@@ -52,8 +52,11 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
     ];
 
     return SafeArea(
-      child: WillPopScope(
-        onWillPop: onWillPop,
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          onWillPop();
+        },
         child: Scaffold(
           extendBody: true,
           bottomNavigationBar: NavigationBar(

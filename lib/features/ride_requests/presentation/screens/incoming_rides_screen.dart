@@ -388,16 +388,21 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        context.read<RideCubit>().updateRideStatus(
-                            UpdateRideRequestStatusParams(
-                                requestId: item.id, status: 'accepted'), () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DistanceTrackingScreen(
-                                        requestId: item.id ?? "",
-                                      )));
-                        });
+                        if (item.isScheduled) {
+                          prebookDialog(item);
+                        } else {
+                          context.read<RideCubit>().updateRideStatus(
+                              UpdateRideRequestStatusParams(
+                                  requestId: item.id, status: 'accepted'), () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DistanceTrackingScreen(
+                                          requestId: item.id ?? "",
+                                        )));
+                          });
+                        }
                       },
                       child: rideCubit.state.isLoading == true
                           ? const CircularProgressIndicator()
@@ -439,6 +444,61 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Future prebookDialog(RideRequestEntity item) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Accept Prebooked Ride?"),
+          content: Text("This ride is scheduled. Do you want to accept it?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Accept"),
+              onPressed: () {
+                // Accept the prebooked ride
+                context.read<RideCubit>().updateRideStatus(
+                    UpdateRideRequestStatusParams(
+                        requestId: item.id, status: 'accepted'), () {
+                  Navigator.pop(context);
+                  acceptPreBookRideDialog();
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future acceptPreBookRideDialog() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Ride Accepted"),
+          content: const Text(
+              "You have accepted a prebooked ride. You can start the ride at its scheduled time from ${"Scheduled Rides"} section"
+              ""),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

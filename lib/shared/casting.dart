@@ -1,6 +1,9 @@
 import 'package:intl/intl.dart';
 
 String extractDate(String dateTimeString) {
+  if(dateTimeString.isEmpty){
+    return '';
+  }
   // Parse the string to DateTime
   DateTime parsedDate = DateTime.parse(dateTimeString);
 

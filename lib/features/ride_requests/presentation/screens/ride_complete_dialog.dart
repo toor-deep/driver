@@ -24,7 +24,6 @@ void showRideCompletedDialog(BuildContext context) {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 10),

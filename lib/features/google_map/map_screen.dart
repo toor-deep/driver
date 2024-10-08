@@ -34,7 +34,6 @@ class _MapSampleState extends State<MapSample> {
         forceReRender();
       });
     }
-    //super.didChangeAppLifecycleState(state);
   }
 
   Future<void> forceReRender() async {
@@ -67,7 +66,6 @@ class _MapSampleState extends State<MapSample> {
       Marker(
         markerId: MarkerId('currentLocation'),
         position: widget.currentLocation,
-        infoWindow: InfoWindow(title: 'Your Location'),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
       ),
     };

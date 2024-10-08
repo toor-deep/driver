@@ -64,7 +64,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
     case '/DistanceTracking':
       return MaterialPageRoute(
-        builder: (context) => const DistanceTrackingScreen(),
+        builder: (context) => const DistanceTrackingScreen(requestId: '',),
       );
     default:
       return MaterialPageRoute(
