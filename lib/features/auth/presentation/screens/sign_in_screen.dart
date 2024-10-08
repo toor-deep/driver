@@ -109,8 +109,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       height: 0.06.sh,
                       child: ElevatedButton(
                         onPressed: () {
-                          if (context.read<SignInCubit>().state.isInputValid ==
-                              false) {
+                          bool isValid =
+                              context.read<SignInCubit>().inputValidator();
+                          if (isValid == false) {
                             showSnackbar('Invalid input', Colors.red);
                           } else {
                             final signInCubit =

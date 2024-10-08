@@ -13,7 +13,6 @@ class SignUpState extends Equatable {
   final VehicleNoStatus vehicleNoStatus;
   final String? phone;
   final PasswordStatus passwordStatus;
-  final bool isInputValid;
   final bool isLoading;
   final AuthUser? authUser;
 
@@ -27,7 +26,6 @@ class SignUpState extends Equatable {
     this.vehicleNoStatus=VehicleNoStatus.unknown,
     this.emailStatus = EmailStatus.unknown,
     this.passwordStatus = PasswordStatus.unknown,
-    this.isInputValid=false,
     this.authUser
   });
 
@@ -39,7 +37,6 @@ class SignUpState extends Equatable {
     EmailStatus? emailStatus,
     VehicleNoStatus? vehicleNoStatus,
     PasswordStatus? passwordStatus,
-    bool? isInputValid,
     bool? isLoading,
     String? vehicleNumber,
     AuthUser? authUser
@@ -51,7 +48,6 @@ class SignUpState extends Equatable {
       phone: phone ?? this.phone,
       emailStatus: emailStatus ?? this.emailStatus,
       passwordStatus: passwordStatus ?? this.passwordStatus,
-      isInputValid:  isInputValid ?? this.isInputValid,
       isLoading: isLoading ?? this.isLoading,
       authUser: authUser ?? this.authUser,
       vehicleNumber: vehicleNumber ?? this.vehicleNumber,
@@ -65,7 +61,6 @@ class SignUpState extends Equatable {
     password,
     emailStatus,
     passwordStatus,
-    isInputValid,
     isLoading,
     phone,
     vehicleNumber,

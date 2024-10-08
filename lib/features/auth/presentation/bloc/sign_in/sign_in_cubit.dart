@@ -9,14 +9,14 @@ class SignInCubit extends Cubit<SignInState> {
   void emailChanged(String value) {
     final email = value.toString();
 
-    final emailRegex = RegExp(r'^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+    final emailRegex = RegExp(r'^[a-z0-9._]+@[a-z0-9]+\.[a-z]+');
 
     if (emailRegex.hasMatch(email)) {
       emit(
         state.copyWith(
             email: email,
-            emailStatus: EmailStatus.valid,
-            isInputValid: inputValidator()),
+          emailStatus: EmailStatus.valid
+        ),
       );
     } else {
       emit(state.copyWith(emailStatus: EmailStatus.invalid));
@@ -31,7 +31,7 @@ class SignInCubit extends Cubit<SignInState> {
         state.copyWith(
             password: password,
             passwordStatus: PasswordStatus.valid,
-            isInputValid: inputValidator()),
+        ),
       );
     } else {
       emit(state.copyWith(passwordStatus: PasswordStatus.invalid));

@@ -12,8 +12,6 @@ class SignInState extends Equatable {
   final String? password;
   final EmailStatus emailStatus;
   final PasswordStatus passwordStatus;
-
-  final bool isInputValid;
   final bool isLoading;
   final AuthUser? authUser;
 
@@ -23,8 +21,6 @@ class SignInState extends Equatable {
     this.isLoading=false,
     this.emailStatus = EmailStatus.unknown,
     this.passwordStatus = PasswordStatus.unknown,
-
-    this.isInputValid=false,
     this.authUser,
   });
 
@@ -33,7 +29,6 @@ class SignInState extends Equatable {
     String? password,
     EmailStatus? emailStatus,
     PasswordStatus? passwordStatus,
-    bool? isInputValid,
     bool? isLoading,
     AuthUser? authUser
   }) {
@@ -42,7 +37,6 @@ class SignInState extends Equatable {
       password: password ?? this.password,
       emailStatus: emailStatus ?? this.emailStatus,
       passwordStatus: passwordStatus ?? this.passwordStatus,
-      isInputValid:  isInputValid ?? this.isInputValid,
       isLoading: isLoading ?? this.isLoading,
       authUser: authUser ?? this.authUser
     );
@@ -54,7 +48,7 @@ class SignInState extends Equatable {
     password,
     emailStatus,
     passwordStatus,
-    isInputValid,
+    authUser,
     isLoading
   ];
 }
