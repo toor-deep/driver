@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:rickshaw_driver_app/features/auth/presentation/bloc/sign_up/sign_up_state.dart';
+import 'package:rickshaw_driver_app/shared/toast_alert.dart';
 import '../sign_in/sign_in_state.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
@@ -9,7 +11,7 @@ class SignUpCubit extends Cubit<SignUpState> {
     final email = value.toString();
 
     final emailRegex =
-        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
     if (emailRegex.hasMatch(email)) {
       emit(

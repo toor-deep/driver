@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rickshaw_driver_app/features/history/ride_history.dart';
+import 'package:rickshaw_driver_app/features/more/screens/ride_history.dart';
 import 'package:rickshaw_driver_app/features/home/screens/home_screen.dart';
 import 'package:rickshaw_driver_app/features/more/more_main_view.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/presentation/screens/incoming_rides_screen.dart';
+import 'package:rickshaw_driver_app/features/scheduled_rides/scheduled_rides.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
   const BottomNavigationBarScreen({super.key});
 
   @override
-  State<BottomNavigationBarScreen> createState() => _BottomNavigationBarScreenState();
+  State<BottomNavigationBarScreen> createState() =>
+      _BottomNavigationBarScreenState();
 }
 
 class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
@@ -25,29 +27,30 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
         return false; // Prevent popping the screen
       } else {
         return await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Exit Confirmation'),
-            content: const Text('Are you sure you want to exit the app?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Exit Confirmation'),
+                content: const Text('Are you sure you want to exit the app?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: const Text('Exit'),
+                  ),
+                ],
               ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('Exit'),
-              ),
-            ],
-          ),
-        ) ?? false;
+            ) ??
+            false;
       }
     }
 
-    final List<Widget> _children = [
+    final List<Widget> children = [
       const HomeScreen(),
       const IncomingRidesScreen(),
-      const RideHistoryScreen(),
+      ScheduledRides(),
       const MoreOptionsScreen()
     ];
 
@@ -78,7 +81,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
                 label: 'Requests',
               ),
               NavigationDestination(
-                icon: Icon(Icons.history),
+                icon: Icon(Icons.timelapse),
                 label: 'History',
               ),
               NavigationDestination(
@@ -87,7 +90,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
               ),
             ],
           ),
-          body: _children.elementAt(selectIndex),
+          body: children.elementAt(selectIndex),
         ),
       ),
     );

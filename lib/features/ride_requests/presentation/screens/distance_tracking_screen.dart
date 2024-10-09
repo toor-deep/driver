@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +13,7 @@ import '../bloc/ride_request_bloc.dart';
 
 class DistanceTrackingScreen extends StatefulWidget {
   final String requestId;
+
   const DistanceTrackingScreen({required this.requestId});
 
   @override
@@ -64,11 +66,11 @@ class _HomePageState extends State<DistanceTrackingScreen> {
         return PopScope(
           canPop: false,
           onPopInvokedWithResult: (didPop, result) {
-            if(_isRideCompleted){
+            if (_isRideCompleted) {
               Navigator.pop(context);
-            }
-            else{
-              showSnackbar('You have to complete ride before proceeding', Colors.red);
+            } else {
+              showSnackbar(
+                  'You have to complete ride before proceeding', Colors.red);
             }
           },
           child: Scaffold(
@@ -97,7 +99,9 @@ class _HomePageState extends State<DistanceTrackingScreen> {
                         width: 0.8.sw,
                         height: 0.07.sh,
                         child: ElevatedButton(
-                          onPressed: _isRideCompleted ? () => Navigator.pop(context) : _onDelivered,
+                          onPressed: _isRideCompleted
+                              ? () => Navigator.pop(context)
+                              : _onDelivered,
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -122,13 +126,16 @@ class _HomePageState extends State<DistanceTrackingScreen> {
       UpdateRideRequestStatusParams(
         requestId: widget.requestId,
         status: 'completed',
+        driverId: FirebaseAuth.instance.currentUser?.uid ?? "",
       ),
-          () {
+      () {
         setState(() {
           _isRideCompleted = true;
         });
-        context.read<RideCubit>().completeRide(widget.requestId);
-        showRideCompletedDialog(context);
+        context.read<RideCubit>().completeRide(widget.requestId,(){
+          showRideCompletedDialog(context);
+        });
+
       },
     );
   }

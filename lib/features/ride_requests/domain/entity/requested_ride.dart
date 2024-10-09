@@ -12,6 +12,7 @@ class RideRequestEntity extends Equatable {
   final bool isScheduled;
   final String? preBookRideDate;
   final String? preBookRideTime;
+  final String driverId;
 
   const RideRequestEntity(
       {required this.id,
@@ -23,6 +24,7 @@ class RideRequestEntity extends Equatable {
       required this.price,
       this.preBookRideDate,
       this.preBookRideTime,
+      required this.driverId,
       required this.createdAt,
       required this.isScheduled});
 
@@ -32,6 +34,7 @@ class RideRequestEntity extends Equatable {
       String? endLocation,
       String? vehicleType,
       String? status,
+      String? driverId,
       double? price,
       String? userName,
       DateTime? createdAt,
@@ -45,6 +48,7 @@ class RideRequestEntity extends Equatable {
         vehicleType: vehicleType ?? this.vehicleType,
         status: status ?? this.status,
         price: price ?? this.price,
+        driverId: driverId ?? this.driverId,
         preBookRideDate: preBookRideDate ?? this.preBookRideDate,
         preBookRideTime: preBookRideTime ?? this.preBookRideTime,
         userName: userName ?? this.userName,
@@ -60,6 +64,7 @@ class RideRequestEntity extends Equatable {
         vehicleType,
         status,
         price,
+        driverId,
         createdAt,
         isScheduled,
         userName,

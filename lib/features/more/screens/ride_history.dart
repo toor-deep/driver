@@ -24,7 +24,6 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            automaticallyImplyLeading: false,
             title: const Text("Ride History"),
           ),
           body: state.isLoading == true

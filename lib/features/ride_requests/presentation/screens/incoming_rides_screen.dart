@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +24,7 @@ class IncomingRidesScreen extends StatefulWidget {
 
 class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
   late RideCubit rideCubit;
+  User? firebaseAuth=FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -144,7 +146,7 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
               leading: const CircleAvatar(),
               title: Text(item.userName,
                   style: Theme.of(context).textTheme.displayMedium),
-              trailing: Text(item.price.toString(),
+              trailing: Text("Rs.${item.price.toStringAsFixed(0)}",
                   style: Theme.of(context).textTheme.displayMedium),
             ),
             Spacing.hmed,
@@ -212,6 +214,7 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                       onPressed: () {
                         context.read<RideCubit>().updateRideStatus(
                             UpdateRideRequestStatusParams(
+                              driverId: firebaseAuth?.uid??"",
                                 requestId: item.id, status: 'accepted'), () {
                           Navigator.push(
                               context,
@@ -236,11 +239,13 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                             onTap: () {
                               context.read<RideCubit>().updateRideStatus(
                                   UpdateRideRequestStatusParams(
+                                     driverId: firebaseAuth?.uid??"",
                                       requestId: item.id ?? "",
                                       status: 'cancelled'), () {
                                 context
                                     .read<RideCubit>()
-                                    .completeRide(item.id ?? "");
+                                    .completeRide(item.id ?? "",
+                                    (){});
                               });
                             });
                       },
@@ -278,7 +283,7 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
               leading: const CircleAvatar(),
               title: Text(item.userName ?? "",
                   style: Theme.of(context).textTheme.displayMedium),
-              trailing: Text(item.price.toString(),
+              trailing: Text("Rs.${item.price.toStringAsFixed(0)}",
                   style: Theme.of(context).textTheme.displayMedium),
             ),
             Spacing.hmed,
@@ -393,6 +398,7 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                         } else {
                           context.read<RideCubit>().updateRideStatus(
                               UpdateRideRequestStatusParams(
+                                driverId: firebaseAuth?.uid??"",
                                   requestId: item.id, status: 'accepted'), () {
                             Navigator.push(
                                 context,
@@ -418,11 +424,12 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                             onTap: () {
                               context.read<RideCubit>().updateRideStatus(
                                   UpdateRideRequestStatusParams(
+                                      driverId: firebaseAuth?.uid??"",
                                       requestId: item.id,
                                       status: 'cancelled'), () {
                                 context
                                     .read<RideCubit>()
-                                    .completeRide(item.id ?? "");
+                                    .completeRide(item.id ?? "",(){});
                               });
                             });
                       },
@@ -452,11 +459,11 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Accept Prebooked Ride?"),
-          content: Text("This ride is scheduled. Do you want to accept it?"),
+          title: const Text("Accept Prebooked Ride?"),
+          content: const Text("This ride is scheduled. Do you want to accept it?"),
           actions: <Widget>[
             TextButton(
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -464,9 +471,9 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
             TextButton(
               child: Text("Accept"),
               onPressed: () {
-                // Accept the prebooked ride
                 context.read<RideCubit>().updateRideStatus(
                     UpdateRideRequestStatusParams(
+                        driverId: firebaseAuth?.uid??"",
                         requestId: item.id, status: 'accepted'), () {
                   Navigator.pop(context);
                   acceptPreBookRideDialog();

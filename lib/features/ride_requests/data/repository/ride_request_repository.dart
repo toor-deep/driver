@@ -6,7 +6,9 @@ abstract class DriverRideRequestRepository {
   Future<void> updateRideRequestStatus({
     required String requestId,
     required String status,
+    required String driverId
   });
+  Stream<List<RideRequestEntity>> getPreBookedRidesForDriver(String driverId);
 
   Stream<List<RideRequestEntity>>  getAllPendingRideRequestsForDriver();
 

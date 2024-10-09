@@ -4,16 +4,18 @@ import '../../../../core/api/api_url.dart';
 import '../model/ride_request_model.dart';
 
 abstract class DriverRideRequestDataSource {
-  Future<void> updateRideRequestStatus({
-    required String requestId,
-    required String status,
-  });
+  Future<void> updateRideRequestStatus(
+      {required String requestId,
+      required String status,
+      required String driverId});
 
   Stream<List<RideRequest>> getAllPendingRideRequestsForDriver();
 
   Future<List<RideRequest>> getCompletedRideRequestsForDriver(String driverId);
 
   Future<RideRequest> getRideRequestDetails(String requestId);
+
+  Stream<List<RideRequest>> getPreBookedRidesForDriver(String driverId);
 
   Future<void> saveCompletedOrCanceledRide({
     required String driverId,
@@ -23,12 +25,12 @@ abstract class DriverRideRequestDataSource {
 
 class DriverRideRequestDataSourceImpl implements DriverRideRequestDataSource {
   @override
-  Future<void> updateRideRequestStatus({
-    required String requestId,
-    required String status,
-  }) async {
+  Future<void> updateRideRequestStatus(
+      {required String requestId,
+      required String status,
+      required String driverId}) async {
     try {
-      final updateData = {'status': status};
+      final updateData = {'status': status, 'driverId': driverId};
       final querySnapshot =
           await ApiUrl.rides.where('id', isEqualTo: requestId).get();
 
@@ -55,6 +57,21 @@ class DriverRideRequestDataSourceImpl implements DriverRideRequestDataSource {
       }).toList();
     }).handleError((error) {
       print('Error fetching pending ride requests: $error');
+    });
+  }
+
+  Stream<List<RideRequest>> getPreBookedRidesForDriver(String driverId) {
+    return ApiUrl.rides
+        .where('isScheduled', isEqualTo: true)
+        .where('status', isEqualTo: 'accepted')
+        .where('driverId', isEqualTo: driverId)
+        .snapshots()
+        .map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return RideRequest.fromMap(doc.data());
+      }).toList();
+    }).handleError((error) {
+      print('Error fetching pre-booked rides: $error');
     });
   }
 
@@ -89,6 +106,7 @@ class DriverRideRequestDataSourceImpl implements DriverRideRequestDataSource {
 
       final rideRequestModel = RideRequest(
         id: completedRidesRef.id,
+        driverId: rideRequest.driverId,
         userId: rideRequest.userId,
         preBookRideTime: rideRequest.preBookRideTime,
         preBookRideDate: rideRequest.preBookRideDate,

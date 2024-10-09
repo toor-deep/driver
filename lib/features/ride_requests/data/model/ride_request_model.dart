@@ -6,6 +6,7 @@ import '../../domain/entity/requested_ride.dart';
 class RideRequest extends Equatable {
   final String id;
   final String userId;
+  final String driverId;
   final String startLocation;
   final String endLocation;
   final String vehicleType;
@@ -20,6 +21,7 @@ class RideRequest extends Equatable {
   const RideRequest(
       {required this.id,
       required this.userId,
+      required this.driverId,
       required this.startLocation,
       required this.endLocation,
       required this.vehicleType,
@@ -35,6 +37,7 @@ class RideRequest extends Equatable {
     return {
       'id': id,
       'userId': userId,
+      'driverId': driverId,
       'startLocation': startLocation,
       'endLocation': endLocation,
       'vehicleType': vehicleType,
@@ -54,19 +57,20 @@ class RideRequest extends Equatable {
     return RideRequest(
       id: map['id'] ?? '',
       userId: map['userId'] ?? '',
+      driverId: map['driverId'] ?? "",
       isScheduled: map['isScheduled'] ?? false,
       startLocation: map['startLocation'] ?? '',
       endLocation: map['endLocation'] ?? '',
       vehicleType: map['vehicleType'] ?? '',
       price: (map['price'] as num?)?.toDouble() ?? 0.0,
       status: map['status'] ?? 'pending',
-      userName: map['username'] ?? '', // Ensure correct key name
+      userName: map['username'] ?? '',
+      // Ensure correct key name
       preBookRideTime: map['time'] ?? '',
       preBookRideDate: map['date'] ?? '',
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
-
 
   @override
   List<Object> get props => [
@@ -76,6 +80,7 @@ class RideRequest extends Equatable {
         vehicleType,
         price,
         status,
+        driverId,
         createdAt,
         userName,
         userId,
@@ -85,6 +90,7 @@ class RideRequest extends Equatable {
   RideRequestEntity toEntity() {
     return RideRequestEntity(
         id: id,
+        driverId: driverId,
         startLocation: startLocation,
         endLocation: endLocation,
         vehicleType: vehicleType,

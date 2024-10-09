@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/completed_ride.usecase.dart';
+import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/get_pre_book_ride.usecase.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/get_ride_request.usecase.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/presentation/bloc/ride_request_state.dart';
 import 'package:rickshaw_driver_app/shared/toast_alert.dart';
@@ -14,11 +15,14 @@ class RideCubit extends Cubit<RequestedRideState> {
   final GetAllPendingRideRequestsForDriverUseCase
       getAllPendingRideRequestsForDriverUseCase;
   final CompleteRideUseCase completeRideUseCase;
+  final GetAllPreBookRideRequestsForDriverUseCase
+      getAllPreBookRideRequestsForDriverUseCase;
 
   RideCubit(
       {required this.getRideRequestDetailsUseCase,
       required this.getAllPendingRideRequestsForDriverUseCase,
       required this.updateRideRequestStatusUseCase,
+      required this.getAllPreBookRideRequestsForDriverUseCase,
       required this.completeRideUseCase})
       : super(const RequestedRideState());
 
@@ -48,6 +52,20 @@ class RideCubit extends Cubit<RequestedRideState> {
     }
   }
 
+  void getAllPreBookRidesList() {
+    emit(state.copyWith(isLoading: true));
+    try {
+      getAllPreBookRideRequestsForDriverUseCase(userId ?? '').listen(
+          (pendingRides) {
+        emit(state.copyWith(isLoading: false, requestedRides: pendingRides));
+      }, onError: (e) {
+        emit(state.copyWith(isLoading: false));
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> updateRideStatus(
       UpdateRideRequestStatusParams params, Function onSuccess) async {
     emit(state.copyWith(isLoading: true));
@@ -66,7 +84,7 @@ class RideCubit extends Cubit<RequestedRideState> {
     }
   }
 
-  Future<void> completeRide(String requestId) async {
+  Future<void> completeRide(String requestId,Function onSuccess) async {
     try {
       emit(state.copyWith(isLoading: true));
       await completeRideUseCase.call(
@@ -74,6 +92,7 @@ class RideCubit extends Cubit<RequestedRideState> {
         id: userId ?? "",
       );
       emit(state.copyWith(isLoading: false));
+      onSuccess();
     } catch (e) {
       print('Failed to complete the ride: $e');
     }

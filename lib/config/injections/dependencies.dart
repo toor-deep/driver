@@ -23,6 +23,7 @@ import '../../features/current_user/domain/usecase/delete_user.usecase.dart';
 import '../../features/current_user/domain/usecase/get_user_info.usecase.dart';
 import '../../features/current_user/domain/usecase/update_user.usecase.dart';
 import '../../features/current_user/presentation/bloc/user_cubit.dart';
+import '../../features/ride_requests/domain/usecase/get_pre_book_ride.usecase.dart';
 
 final getIt = GetIt.instance;
 
@@ -88,9 +89,13 @@ void injectDependencies() {
       getIt<DriverRideRequestRepositoryImpl>()));
   getIt.registerSingleton(
       CompleteRideUseCase(getIt<DriverRideRequestRepositoryImpl>()));
+  getIt.registerSingleton(GetAllPreBookRideRequestsForDriverUseCase(
+      getIt<DriverRideRequestRepositoryImpl>()));
   //bloc
   getIt.registerSingleton(RideCubit(
       completeRideUseCase: getIt<CompleteRideUseCase>(),
+      getAllPreBookRideRequestsForDriverUseCase:
+          getIt<GetAllPreBookRideRequestsForDriverUseCase>(),
       getRideRequestDetailsUseCase: getIt<GetRideRequestDetailsUseCase>(),
       getAllPendingRideRequestsForDriverUseCase:
           getIt<GetAllPendingRideRequestsForDriverUseCase>(),

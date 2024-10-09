@@ -160,7 +160,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 role: 'driver',
                                 photoURL: value.photoURL ?? "",
                                 phone: value.phone ?? ""));
-                            Navigator.pushNamed(context, '/Home');
+                            Navigator.pushNamed(context, '/BottomBar');
                           });
                         },
                       ),

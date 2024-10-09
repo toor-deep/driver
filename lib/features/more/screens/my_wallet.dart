@@ -52,18 +52,6 @@ class _WalletScreenState extends State<WalletScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Withdraw button
-                SizedBox(
-                  width: double.infinity, // Full width button
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Handle withdraw button click
-                    },
-                    child: const Text('Withdraw'),
-                  ),
-                ),
-                const SizedBox(height: 20),
-
                 // Recent Transactions header
                 const Text(
                   "Recent Transactions",

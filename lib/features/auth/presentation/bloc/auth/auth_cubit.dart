@@ -61,12 +61,11 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final user = await _signInWithGoogleUseCase.call();
 
-      final querySnapshot =
-          await ApiUrl.users.where('email', isEqualTo: user.email).get();
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
 
-      if (querySnapshot.docs.isEmpty) {
-        onSuccess(user);
-      }
+      showSnackbar('Login Successfully', Colors.green);
+      onSuccess(user);
 
       emit(state.copyWith(authUser: user, isLoading: false));
     } catch (err) {

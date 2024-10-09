@@ -13,10 +13,12 @@ class DriverRideRequestRepositoryImpl implements DriverRideRequestRepository {
   Future<void> updateRideRequestStatus({
     required String requestId,
     required String status,
+    required String driverId
   }) {
     return dataSource.updateRideRequestStatus(
       requestId: requestId,
       status: status,
+      driverId: driverId
     );
   }
 
@@ -48,5 +50,12 @@ class DriverRideRequestRepositoryImpl implements DriverRideRequestRepository {
         await dataSource.getCompletedRideRequestsForDriver(driverId);
 
     return rideRequests.map((rideRequest) => rideRequest.toEntity()).toList();
+  }
+
+  @override
+  Stream<List<RideRequestEntity>> getPreBookedRidesForDriver(String driverId) {
+    return dataSource.getPreBookedRidesForDriver(driverId).map((rideRequests) {
+      return rideRequests.map((rideRequest) => rideRequest.toEntity()).toList();
+    });
   }
 }

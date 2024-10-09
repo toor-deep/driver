@@ -9,6 +9,7 @@ class UpdateRideRequestStatusUseCase {
     return repository.updateRideRequestStatus(
       requestId: params.requestId,
       status: params.status,
+      driverId: params.driverId
     );
   }
 }
@@ -16,7 +17,8 @@ class UpdateRideRequestStatusUseCase {
 class UpdateRideRequestStatusParams {
   final String requestId;
   final String status;
+   String driverId;
 
   UpdateRideRequestStatusParams(
-      {required this.requestId, required this.status});
+      {required this.requestId, required this.status,required this.driverId});
 }

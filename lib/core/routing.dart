@@ -6,7 +6,7 @@ import 'package:rickshaw_driver_app/features/more/screens/terms_and_conditions.d
 
 import '../features/auth/presentation/screens/sign_in_screen.dart';
 import '../features/auth/presentation/screens/sign_up_screen.dart';
-import '../features/history/ride_history.dart';
+import '../features/more/screens/ride_history.dart';
 import '../features/more/screens/my_wallet.dart';
 import '../features/more/screens/profile_screen.dart';
 import '../features/more/screens/settings/change_password.dart';

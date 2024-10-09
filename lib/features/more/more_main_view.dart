@@ -30,6 +30,14 @@ class MoreOptionsScreen extends StatelessWidget {
             ),
             const Divider(),
             OptionTile(
+              icon: Icons.history,
+              title: 'History',
+              onTap: () {
+                Navigator.pushNamed(context, '/RideHistory');
+              },
+            ),
+            const Divider(),
+            OptionTile(
               icon: Icons.settings,
               title: 'Settings',
               onTap: () {
