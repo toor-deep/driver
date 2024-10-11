@@ -40,6 +40,7 @@ dependencies:
   cloud_firestore: ^5.4.1
   equatable:
   flutter_bloc:
+  rxdart: ^0.28.0
   flutter_screenutil:
   flutter_styled_toast:
   google_fonts:

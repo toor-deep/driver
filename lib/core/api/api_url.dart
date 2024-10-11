@@ -11,4 +11,5 @@ class ApiUrl {
   static final prebook_rides =
       FirebaseFirestore.instance.collection('prebook_rides');
   static final rides = FirebaseFirestore.instance.collectionGroup('rides');
+  static final driver_history_rides = FirebaseFirestore.instance.collectionGroup('driver_rides');
 }

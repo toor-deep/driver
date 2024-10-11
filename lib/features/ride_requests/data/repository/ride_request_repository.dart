@@ -10,12 +10,13 @@ abstract class DriverRideRequestRepository {
   });
   Stream<List<RideRequestEntity>> getPreBookedRidesForDriver(String driverId);
 
-  Stream<List<RideRequestEntity>>  getAllPendingRideRequestsForDriver();
+  Stream<List<RideRequestEntity>>  getAllPendingRideRequestsForDriver(String driverId);
 
   Future<RideRequestEntity> getRideRequestDetails(String requestId);
   Future<void> saveCompletedOrCanceledRide({
     required String driverId,
-    required String requestId
+    required String requestId,
+    required String status,
   });
   Future<List<RideRequestEntity>> getCompletedRideRequestsForDriver(String driverId);
 

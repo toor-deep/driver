@@ -6,6 +6,7 @@ import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/get_pr
 import 'package:rickshaw_driver_app/features/ride_requests/domain/usecase/get_ride_request.usecase.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/presentation/bloc/ride_request_state.dart';
 import 'package:rickshaw_driver_app/shared/toast_alert.dart';
+import '../../domain/entity/requested_ride.dart';
 import '../../domain/usecase/get_ride_details.usecase.dart';
 import '../../domain/usecase/update_ride_status.usecase.dart';
 
@@ -42,7 +43,7 @@ class RideCubit extends Cubit<RequestedRideState> {
   void getAllRidesList() {
     emit(state.copyWith(isLoading: true));
     try {
-      getAllPendingRideRequestsForDriverUseCase().listen((pendingRides) {
+      getAllPendingRideRequestsForDriverUseCase(userId??"").listen((pendingRides) {
         emit(state.copyWith(isLoading: false, requestedRides: pendingRides));
       }, onError: (e) {
         emit(state.copyWith(isLoading: false));
@@ -84,14 +85,18 @@ class RideCubit extends Cubit<RequestedRideState> {
     }
   }
 
-  Future<void> completeRide(String requestId,Function onSuccess) async {
+  Future<void> completeRide(String requestId, String status, Function onSuccess) async {
     try {
       emit(state.copyWith(isLoading: true));
       await completeRideUseCase.call(
         requestId: requestId,
         id: userId ?? "",
+        status: status
       );
-      emit(state.copyWith(isLoading: false));
+      List<RideRequestEntity>? requestedRides=state.requestedRides;
+      requestedRides?.removeWhere((element) => element.id==requestId,);
+
+      emit(state.copyWith(isLoading: false,requestedRides: requestedRides));
       onSuccess();
     } catch (e) {
       print('Failed to complete the ride: $e');

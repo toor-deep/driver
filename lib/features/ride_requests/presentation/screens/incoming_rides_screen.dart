@@ -237,16 +237,10 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                         showDeleteDialog(
                             context: context,
                             onTap: () {
-                              context.read<RideCubit>().updateRideStatus(
-                                  UpdateRideRequestStatusParams(
-                                     driverId: firebaseAuth?.uid??"",
-                                      requestId: item.id ?? "",
-                                      status: 'cancelled'), () {
                                 context
                                     .read<RideCubit>()
-                                    .completeRide(item.id ?? "",
+                                    .completeRide(item.id ?? "",'cancelled',
                                     (){});
-                              });
                             });
                       },
                       style: ButtonStyle(
@@ -422,15 +416,9 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                         showDeleteDialog(
                             context: context,
                             onTap: () {
-                              context.read<RideCubit>().updateRideStatus(
-                                  UpdateRideRequestStatusParams(
-                                      driverId: firebaseAuth?.uid??"",
-                                      requestId: item.id,
-                                      status: 'cancelled'), () {
                                 context
                                     .read<RideCubit>()
-                                    .completeRide(item.id ?? "",(){});
-                              });
+                                    .completeRide(item.id ?? "",'cancelled',(){});
                             });
                       },
                       style: ButtonStyle(

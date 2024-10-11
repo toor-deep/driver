@@ -52,7 +52,6 @@ class RideRequest extends Equatable {
   }
 
   factory RideRequest.fromMap(Map<String, dynamic> map) {
-    print("Mapping RideRequest from map: $map"); // Debug print statement
 
     return RideRequest(
       id: map['id'] ?? '',

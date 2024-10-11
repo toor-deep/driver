@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/presentation/bloc/ride_request_state.dart';
 import 'package:rickshaw_driver_app/features/ride_requests/presentation/screens/ride_complete_dialog.dart';
 import 'package:rickshaw_driver_app/shared/toast_alert.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 import '../../domain/usecase/update_ride_status.usecase.dart';
 import '../bloc/ride_request_bloc.dart';
@@ -91,6 +92,18 @@ class _HomePageState extends State<DistanceTrackingScreen> {
                   ),
                   if (state.isLoading == true)
                     const Center(child: CircularProgressIndicator()),
+                  Container(
+                    height: 0.04.sh,
+                    color: Colors.white,
+                    child: const Center(
+                      child: TextScroll(
+                        delayBefore: Duration(milliseconds: 1000),
+                        " Note:- Please complete the ride only after the user has made the payment.",
+                        style: TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                   if (state.isLoading == false) // Show button when not loading
                     Positioned(
                       bottom: 30,
@@ -132,10 +145,9 @@ class _HomePageState extends State<DistanceTrackingScreen> {
         setState(() {
           _isRideCompleted = true;
         });
-        context.read<RideCubit>().completeRide(widget.requestId,(){
+        context.read<RideCubit>().completeRide(widget.requestId,'completed', () {
           showRideCompletedDialog(context);
         });
-
       },
     );
   }

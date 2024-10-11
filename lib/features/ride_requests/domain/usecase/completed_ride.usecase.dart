@@ -7,8 +7,8 @@ class CompleteRideUseCase {
 
   CompleteRideUseCase(this.repository);
 
-  Future<void> call({required String id, required String requestId}) {
-    return repository.saveCompletedOrCanceledRide(driverId: id, requestId: requestId);
+  Future<void> call({required String id, required String requestId,required String status,}) {
+    return repository.saveCompletedOrCanceledRide(driverId: id, requestId: requestId,status: status);
   }
 
   Future<List<RideRequestEntity>> getCompletedRides({required String driverId}) {

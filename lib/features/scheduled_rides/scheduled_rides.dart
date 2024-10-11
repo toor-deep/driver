@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:rickshaw_driver_app/shared/toast_alert.dart';
 
 import '../../shared/casting.dart';
@@ -218,14 +219,70 @@ class _IncomingRidesScreenState extends State<ScheduledRides> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DistanceTrackingScreen(
-                              requestId: item.id ?? "",
-                            ),
-                          ),
+                        final DateTime now = DateTime.now();
+
+                        // Pre-book ride date from server (format: '2024-10-11T00:00:00.000')
+                        final String rideDate = item.preBookRideDate ?? "";
+                        // Ride time string (format: '09:25 PM')
+                        final String rideTime = item.preBookRideTime ?? "";
+
+                        // Parse the ride date (assuming it follows ISO 8601 format)
+                        DateTime? scheduledDate = DateTime.tryParse(rideDate);
+
+                        if (scheduledDate == null) {
+                          showSnackbar("Invalid ride date.", Colors.red);
+                          return;
+                        }
+
+                        // Parse the time string (format: '09:25 PM') into TimeOfDay
+                        final timeFormat =
+                            DateFormat.jm(); // 'h:mm a' format like '09:25 PM'
+                        DateTime? parsedTime;
+
+                        try {
+                          parsedTime = timeFormat.parse(rideTime);
+                        } catch (e) {
+                          showSnackbar("Invalid ride time.", Colors.red);
+                          return;
+                        }
+
+                        // Combine the parsed date and time into a single DateTime object
+                        final scheduledDateTime = DateTime(
+                          scheduledDate.year,
+                          scheduledDate.month,
+                          scheduledDate.day,
+                          parsedTime.hour, // Get hour from parsed time
+                          parsedTime.minute, // Get minute from parsed time
                         );
+
+                        // Define a 30-minute window before and after the scheduled time
+                        final DateTime minStartTime = scheduledDateTime
+                            .subtract(const Duration(minutes: 30));
+                        final DateTime maxStartTime =
+                            scheduledDateTime.add(const Duration(minutes: 30));
+
+                        // Check if the current time is within the allowed time window
+                        if (now.isBefore(minStartTime)) {
+                          showSnackbar(
+                            "You can only start the ride 30 minutes before the scheduled time.",
+                            Colors.red,
+                          );
+                        } else if (now.isAfter(maxStartTime)) {
+                          showSnackbar(
+                            "You can only start the ride up to 30 minutes after the scheduled time.",
+                            Colors.red,
+                          );
+                        } else {
+                          // Proceed to start the ride if the current time is within the allowed window
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DistanceTrackingScreen(
+                                requestId: item.id ?? "",
+                              ),
+                            ),
+                          );
+                        }
                       },
                       child: rideCubit.state.isLoading == true
                           ? const CircularProgressIndicator()
@@ -239,25 +296,18 @@ class _IncomingRidesScreenState extends State<ScheduledRides> {
                         showDeleteDialog(
                             context: context,
                             onTap: () {
-                              context.read<RideCubit>().updateRideStatus(
-                                  UpdateRideRequestStatusParams(
-                                      driverId: FirebaseAuth
-                                              .instance.currentUser?.uid ??
-                                          "",
-                                      requestId: item.id,
-                                      status: 'cancelled'), () {
-                                context
-                                    .read<RideCubit>()
-                                    .completeRide(item.id ?? "",
-                                    (){
-                                      Navigator.popUntil(context, (route) => route.isFirst,);
-                                    });
+                              context
+                                  .read<RideCubit>()
+                                  .completeRide(item.id ?? "",'cancelled', () {
+                                Navigator.popUntil(
+                                  context,
+                                  (route) => route.isFirst,
+                                );
                               });
                             });
                       },
                       style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.red)),
+                          backgroundColor: WidgetStateProperty.all(Colors.red)),
                       child: Text(
                         'Declined',
                         style: Theme.of(context)

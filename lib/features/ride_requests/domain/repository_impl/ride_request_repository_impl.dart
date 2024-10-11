@@ -24,8 +24,8 @@ class DriverRideRequestRepositoryImpl implements DriverRideRequestRepository {
 
   @override
   @override
-  Stream<List<RideRequestEntity>> getAllPendingRideRequestsForDriver() {
-    return dataSource.getAllPendingRideRequestsForDriver().map((rideRequests) {
+  Stream<List<RideRequestEntity>> getAllPendingRideRequestsForDriver(String driverId) {
+    return dataSource.getAllPendingRideRequestsForDriver(driverId).map((rideRequests) {
       return rideRequests.map((rideRequest) => rideRequest.toEntity()).toList();
     });
   }
@@ -38,8 +38,9 @@ class DriverRideRequestRepositoryImpl implements DriverRideRequestRepository {
 
   @override
   Future<void> saveCompletedOrCanceledRide(
-      {required String driverId, required String requestId}) async {
+      {required String driverId, required String requestId,required String status,}) async {
     return await dataSource.saveCompletedOrCanceledRide(
+      status: status,
         driverId: driverId, requestId: requestId);
   }
 

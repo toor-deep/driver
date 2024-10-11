@@ -7,7 +7,7 @@ class GetAllPendingRideRequestsForDriverUseCase {
 
   GetAllPendingRideRequestsForDriverUseCase(this.repository);
 
-  Stream<List<RideRequestEntity>> call() {
-    return repository.getAllPendingRideRequestsForDriver();
+  Stream<List<RideRequestEntity>> call(String driverId) {
+    return repository.getAllPendingRideRequestsForDriver(driverId);
   }
 }
