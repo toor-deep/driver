@@ -155,25 +155,29 @@ class _IncomingRidesScreenState extends State<ScheduledRides> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Start Location",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium),
-                                  Text(item.startLocation),
-                                ],
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Start Location",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium),
+                                    Text(item.startLocation),
+                                  ],
+                                ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Date",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium),
-                                  Text(extractDate(item.preBookRideDate ?? "")),
-                                ],
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Date",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium),
+                                    Text(extractDate(item.preBookRideDate ?? "")),
+                                  ],
+                                ),
                               )
                             ],
                           ),
@@ -181,25 +185,29 @@ class _IncomingRidesScreenState extends State<ScheduledRides> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("End Location",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium),
-                                  Text(item.endLocation),
-                                ],
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("End Location",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium),
+                                    Text(item.endLocation),
+                                  ],
+                                ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Time",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium),
-                                  Text(item.preBookRideTime ?? ""),
-                                ],
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Time",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium),
+                                    Text(item.preBookRideTime ?? ""),
+                                  ],
+                                ),
                               )
                             ],
                           ),

@@ -24,7 +24,7 @@ class IncomingRidesScreen extends StatefulWidget {
 
 class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
   late RideCubit rideCubit;
-  User? firebaseAuth=FirebaseAuth.instance.currentUser;
+  User? firebaseAuth = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -214,8 +214,9 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                       onPressed: () {
                         context.read<RideCubit>().updateRideStatus(
                             UpdateRideRequestStatusParams(
-                              driverId: firebaseAuth?.uid??"",
-                                requestId: item.id, status: 'accepted'), () {
+                                driverId: firebaseAuth?.uid ?? "",
+                                requestId: item.id,
+                                status: 'accepted'), () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -237,10 +238,8 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                         showDeleteDialog(
                             context: context,
                             onTap: () {
-                                context
-                                    .read<RideCubit>()
-                                    .completeRide(item.id ?? "",'cancelled',
-                                    (){});
+                              context.read<RideCubit>().completeRide(
+                                  item.id ?? "", 'cancelled', () {});
                             });
                       },
                       style: ButtonStyle(
@@ -323,25 +322,36 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Start Location",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium),
-                                  Text(item.startLocation),
-                                ],
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Start Location",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium),
+                                    Text(item.startLocation),
+                                  ],
+                                ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Date",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium),
-                                  Text(extractDate(item.preBookRideDate ?? "")),
-                                ],
+                              SizedBox(width: 10),
+                              // Add spacing between columns
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Date",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium),
+                                    Text(
+                                      extractDate(item.preBookRideDate ?? ""),
+                                      softWrap: true,
+                                      overflow: TextOverflow
+                                          .visible, // Allow the text to wrap
+                                    ),
+                                  ],
+                                ),
                               )
                             ],
                           ),
@@ -349,25 +359,31 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("End Location",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium),
-                                  Text(item.endLocation),
-                                ],
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("End Location",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium),
+                                    Text(item.endLocation),
+                                  ],
+                                ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Time",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium),
-                                  Text(item.preBookRideTime ?? ""),
-                                ],
+                              SizedBox(width: 10),
+                              // Add spacing between columns
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Time",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium),
+                                    Text(item.preBookRideTime ?? ""),
+                                  ],
+                                ),
                               )
                             ],
                           ),
@@ -392,8 +408,9 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                         } else {
                           context.read<RideCubit>().updateRideStatus(
                               UpdateRideRequestStatusParams(
-                                driverId: firebaseAuth?.uid??"",
-                                  requestId: item.id, status: 'accepted'), () {
+                                  driverId: firebaseAuth?.uid ?? "",
+                                  requestId: item.id,
+                                  status: 'accepted'), () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -416,9 +433,8 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
                         showDeleteDialog(
                             context: context,
                             onTap: () {
-                                context
-                                    .read<RideCubit>()
-                                    .completeRide(item.id ?? "",'cancelled',(){});
+                              context.read<RideCubit>().completeRide(
+                                  item.id ?? "", 'cancelled', () {});
                             });
                       },
                       style: ButtonStyle(
@@ -448,7 +464,8 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Accept Prebooked Ride?"),
-          content: const Text("This ride is scheduled. Do you want to accept it?"),
+          content:
+              const Text("This ride is scheduled. Do you want to accept it?"),
           actions: <Widget>[
             TextButton(
               child: const Text("Cancel"),
@@ -461,8 +478,9 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
               onPressed: () {
                 context.read<RideCubit>().updateRideStatus(
                     UpdateRideRequestStatusParams(
-                        driverId: firebaseAuth?.uid??"",
-                        requestId: item.id, status: 'accepted'), () {
+                        driverId: firebaseAuth?.uid ?? "",
+                        requestId: item.id,
+                        status: 'accepted'), () {
                   Navigator.pop(context);
                   acceptPreBookRideDialog();
                 });
@@ -487,8 +505,7 @@ class _IncomingRidesScreenState extends State<IncomingRidesScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-
-                },
+              },
               child: const Text("OK"),
             ),
           ],
